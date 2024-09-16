@@ -1,102 +1,114 @@
-Unreal NPC Companion Asset
- Introduction
- This plugin enables developers to quickly integrate intelligent, GPT-powered NPCs with
- advanced features like dynamic memory, patrolling behaviours, and companion NPCs into
- Unreal Engine C++ projects.
- Features :
- ● Modular NPCblueprint.
- ● GPT-powered NPC brain.
- ● Text-to-Speech and Speech-to-Text features.
- ● Dynamic in-game reactions and memory.
- ● Companion NPCwith follow mechanics.
- ● Patrolling NPCs.
- ● Locally saved individual NPC save files
- Installation
- Prerequisites:
- ● Unreal Engine version 5.4 (with C++ project setup).
- ● OpenAIandAzure subscriptions
- ● HttpGPT Plugin from Unreal Marketplace.
- ● Python is installed on the system
- Steps:
- Setting up the project:
- ● Makesureyou have a C++ project, with the ThirdPersonTemplate content. If not you’ll
- have to resolve some blueprint dependencies.
- ● Makeaplugins folder, if not already present, named “Plugins” in your project folder.
-● Pastethe asset files in the folder.
- ● Download and paste the HttpGPT plugin files as well, from the marketplace.
- ● Addthefollowing modules to your [ProjectName].Build.cs file :
- "AIModule",
- "GameplayTasks",
- "NavigationSystem",
- "HTTP",
- "AudioCapture",
- "Json",
- “JsonUtilities"
- ● Compile your solution, or regenerate project files.
- ● Opentheproject, if it asks to build modules, select yes.
- ● Opentheplugins window, and enable the custom plugin, HttpGPT, AudioCapture and
- Python Editor Script Plugin.
- ● Restart the engine.
- Required Subscriptions
- ● AnOpenAIpaid subscription is required for the GPT part. Once you have a membership,
- you’ll find your API Key. Copy and paste that key, in the BP_NPCManager’s OpenAI API
- Key field. You can also change the Game World and Common Knowledge details
- here.
- ● Next is an Azure speech studio membership, which can be free, and limited to 5 free
- hours a month. You will find an Azure API key as well once you have signed up and
- created a speech service.
- ● Pastethat key in the BPAzureTTS blueprint’s Azure API key, and also type the region
- name(this can also be found in the Azure Dashboard, for example, uksouth).
-● Onemorestep is required in the Azure setup. Go to the plugins folder, which would be
- something like “YourProject\Plugins\NPC_Companion\Content\NPC\Python”, in the
- Python folder, you’ll find a script called “transcribe_audio.py”.
- ● Openthescript, and pase your APIKey and Region again
- ● Always use the GM_Base as the game mode, or you can derive your own game mode
- from this class.
- All done!
-Howto Use
- A demo level is available demonstrating the plugin called “Demo” for reference.
- Overview:
- ● Thereare 2 types of NPCs available: World and Companion.
- ● Therecan be only 1 companion in the level.
- ● If there are more than 1, only the first one is registered as the companion, and others act
- as WorldNPCs.
- ● TheNPCsaresetup using prompts to the AI, which are sent to ChatGPT.
- ● Theseprompts can be modified and can be found in the BP_NPC_Base blueprint.
- ● Youcanchange these prompts according to your needs:
-The Main Blueprints
- ● Youcanuseeither the WorldNPC or the CompanionNPC blueprints in your level,
- based on your needs. Simply drag and drop any of these in the level.
- ● TheAIdetails can be changed in the details panel, and searching for “AI”
- ● Theyboth have patrolling behaviours, if required, and can be enabled by adding patrol
- points after placing them in the level.
- ● Bydefault, the GM_Base game mode uses the BP_ThirdPersonCharacterNPC as the
- default Pawn Class.
- ● ThisBPhascertain functionalities which are essential for the plugin, so if you have your
- own character class, make a child of this one, or copy all the functions and events to
- your character BP.
- ● All the NPC and World data is saved locally, in the project saved directory.
- ● Thefiles can be deleted from the editor by using an editor blueprint,
- “EUWBP_NPCManager”. Right-click on it and select run.
-Visuals
- ● TheNPC’sappearance can be changed by changing the skeletal mesh, but this might
- break some of the logic(like looking at the NPC, or the NPC looking at the player, when
- in range) if the new mesh is not supported by Unreal.
- ● Whenchanging the skeletal mesh, ensure the new mesh supports the default Unreal
- animations used in the NPC’s animation blueprint (ABP_Manny_NPC). If you encounter
- compatibility issues, consider re-creating animations for your custom mesh.
- ● Ituses the ABP_Manny_NPC animation blueprint, with an additional boolean
+# Unreal NPC Companion Asset
+
+## Introduction
+This plugin enables developers to quickly integrate intelligent, GPT-powered NPCs with advanced features like dynamic memory, patrolling behaviors, and companion NPCs into Unreal Engine C++ projects.
+
+### Features:
+- Modular NPC blueprint.
+- GPT-powered NPC brain.
+- Text-to-Speech and Speech-to-Text features.
+- Dynamic in-game reactions and memory.
+- Companion NPC with follow mechanics.
+- Patrolling NPCs.
+- Locally saved individual NPC save files.
+
+## Installation
+
+### Prerequisites:
+- Unreal Engine version 5.4 (with C++ project setup).
+- OpenAI and Azure subscriptions.
+- HttpGPT Plugin from Unreal Marketplace.
+- Python installed on the system.
+
+### Steps:
+
+1. Ensure you have a C++ project with the **ThirdPersonTemplate** content. If not, resolve the blueprint dependencies.
+2. Create a `Plugins` folder in your project directory (if not already present).
+3. Paste the asset files into the folder.
+4. Download and add the **HttpGPT plugin** files from the Unreal Marketplace.
+5. Add the following modules to your `[ProjectName].Build.cs` file:
+    ```csharp
+    "AIModule",
+    "GameplayTasks",
+    "NavigationSystem",
+    "HTTP",
+    "AudioCapture",
+    "Json",
+    "JsonUtilities"
+    ```
+6. Compile your solution or regenerate project files.
+7. Open the project and build the modules if prompted.
+8. In the Unreal Editor, enable the custom plugin, HttpGPT, AudioCapture, and Python Editor Script Plugin.
+9. Restart the Unreal Engine.
+
+## Required Subscriptions
+
+1. **OpenAI**: A paid subscription is required for GPT integration. Find your API key and paste it in the `BP_NPCManager` OpenAI API Key field.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/1.png)
+
+2. **Azure**: Sign up for Azure Speech Studio (free plan offers 5 hours per month). Retrieve the API key and region, then add them to the `BPAzureTTS` blueprint.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/2.png)
+
+3. **Azure Setup**: Edit the `transcribe_audio.py` script found in the plugin's Python folder to include your API key and region.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/3.png)
+
+Ensure you're using `GM_Base` as the game mode, or derive your own from this class.
+
+## How to Use
+
+A demo level named `Demo` is included to showcase the plugin.
+
+### Overview:
+- There are two types of NPCs: **World** NPCs and **Companion** NPCs.
+- Only one companion can exist per level. Additional NPCs act as **WorldNPCs**.
+- NPCs are controlled via prompts sent to ChatGPT, which can be modified in the `BP_NPC_Base` blueprint.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/4.png)
+
+### Main Blueprints:
+- Use either `WorldNPC` or `CompanionNPC` blueprints in your level. Simply drag and drop them into the scene.
+- AI details can be modified via the details panel.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/5.png)
+
+- Both NPCs support patrolling behaviours. Set patrol points after placing them in the level.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/6.png)
+
+- The default Pawn Class is `BP_ThirdPersonCharacterNPC`. If you're using a custom class, either inherit from this one or copy the necessary functions and events.
+  
+### Saving Data:
+- All NPC and World data is saved locally in the project’s saved directory.
+- To delete save files, use the `EUWBP_NPCManager` editor blueprint.
+
+## Visuals
+
+- To modify the NPC's appearance, change the skeletal mesh. Ensure compatibility with the Unreal animations used in the `ABP_Manny_NPC` animation blueprint.
+-  It uses the ABP_Manny_NPC animation blueprint, with an additional boolean
  “bIsRotating” and the following logic, should you need to add it to a new one.
- ● Itcomes with 3 idle animations, which are played by the behaviour trees.
- ● Youcancustomize the behaviour trees if you want as well.
- ● Theyusethe AI Controller: Base_AIController which sets up the behaviour trees and
- runs them.
-Dynamic Events
- ● Oneof thekey features of this plugin.
- ● Ifyou want to dynamically update the NPC knowledge, and inform them of something
- that happened in the game, while the game is running, and give responses with that in
- mind, you can use dynamic events.
- ● Simply get the game mode, cast it to GM_Base, get the NPCManager from it, and call
- Dynamic Event.
- ● Addtheevent description and that's it. All the NPCs in the game will be aware of this
- event.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/7.png)
+
+- **Idle Animations**: The plugin includes 3 idle animations, which are managed by the behaviour trees.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/8.png)
+
+- Customize behaviour trees as needed, using the **Base_AIController** to control them.
+
+## Dynamic Events
+
+- Dynamically update NPC knowledge in real-time by calling the **Dynamic Event** function.
+- Example usage:
+    ```csharp
+    GetGameMode()
+    CastToGM_Base()
+    GetNPCManager()
+    CallDynamicEvent("Event Description")
+    ```
+- This allows NPCs to respond to in-game events dynamically.
+
+![](https://github.com/Afterlife1707/NPC-Plugin-Project/blob/main/Documentation%20Pics/9.png)
+
