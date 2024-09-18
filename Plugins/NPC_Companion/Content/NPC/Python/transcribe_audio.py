@@ -4,7 +4,7 @@ import wave
 import azure.cognitiveservices.speech as speechsdk
 
 # Azure subscription details
-subscription_key = "4b20ab0ee38b4d7494543af8362493c6"
+subscription_key = ""
 region = "uksouth"
 
 def convert_audio_to_mono_and_16k(file_path, output_path):
